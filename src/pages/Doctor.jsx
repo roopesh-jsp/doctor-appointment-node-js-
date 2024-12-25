@@ -11,7 +11,7 @@ function Doctor() {
   return (
     <div className="flex flex-col items-center gap-3 mt-10">
       <h1 className="text-2xl">{doc.name}</h1>
-      <img className="w-full h-74" src={doc.img} alt="" />
+      <img className="w-1/2 h-74" src={doc.img} alt="" />
       <p className="uppercase font-bold">{doc.type}</p>
       <button className="border border-black py-2 px-4 rounded-md mt-10">
         Book now
