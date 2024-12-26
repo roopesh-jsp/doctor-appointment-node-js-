@@ -28,7 +28,21 @@ function Navbar() {
           <div className="flex items-center group relative hover:bg-slate-400 cursor-pointer hover:text-white px-2 py-2 rounded-md">
             <User />
             {/* <ArrowDown className="w-5 relative top-0.5" /> */}
-            <div className="absolute  flex-col gap-3 top-10 right-0 bg-white border border-gray-200 rounded-md  hidden group-hover:flex">
+            <div className="absolute min-w-40 flex-col capitalize top-10 right-0 bg-white border border-gray-200 rounded-md  hidden group-hover:flex">
+              <NavLink
+                to="/doctors"
+                className={"text-black px-5 py-3 hover:bg-slate-300 sm:hidden "}
+              >
+                doctors
+              </NavLink>
+              <NavLink
+                to="/myAppoitments"
+                className={
+                  "text-black px-5 py-3 hover:bg-slate-300 whitespace-nowrap  sm:hidden"
+                }
+              >
+                my Appointments
+              </NavLink>
               <NavLink
                 to="/profile"
                 className={"text-black px-5 py-3 hover:bg-slate-300 "}
@@ -37,7 +51,9 @@ function Navbar() {
               </NavLink>
               <button
                 to="/profile"
-                className={"text-black px-5 py-3  hover:bg-slate-300 "}
+                className={
+                  "text-black px-5 py-3 bg-red-400 hover:bg-slate-300 "
+                }
                 onClick={handleLogout}
               >
                 logout
