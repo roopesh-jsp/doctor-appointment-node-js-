@@ -1,9 +1,13 @@
-import React, { useContext } from "react";
-import { AppContext } from "../context/AppContext";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { AppContext, useAppContext } from "../context/AppContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Doctors() {
-  const { doctors } = useContext(AppContext);
+  const { doctors, getAllDoctors } = useContext(AppContext);
+
+  useEffect(() => {
+    getAllDoctors();
+  }, []);
 
   const navigate = useNavigate();
 
@@ -13,14 +17,14 @@ export default function Doctors() {
         Doctors
       </h1>
       <div className=" flex items-center justify-center flex-wrap gap-5">
-        {doctors.map((doctor) => {
+        {doctors?.map((doctor) => {
           return (
             <div
-              key={doctor.id}
-              className="w-2/5 h-74 bg-blue-100 m-4 cursor-pointer flex flex-col gap-3 pb-5 items-center capitalize rounded-md overflow-hidden"
-              onClick={() => navigate(`/doctors/${doctor.id}`)}
+              key={doctor._id}
+              className="w-[200px] p-4 h-74 bg-blue-50 shadow-lg m-4 cursor-pointer flex flex-col gap-3 pb-5 items-center capitalize rounded-md overflow-hidden"
+              onClick={() => navigate(`/doctors/${doctor._id}`)}
             >
-              <img src={doctor.img} alt="" />
+              <img src={doctor.img} alt="" className=" h-36" />
               <h2>name:{doctor.name}</h2>
               <p>type:{doctor.type}</p>
               <button className="border border-black px-3 py-1 rounded-lg bg-white">

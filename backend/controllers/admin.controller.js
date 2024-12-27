@@ -7,11 +7,15 @@ import jwt from "jsonwebtoken";
 const addDoctor = async (req, res) => {
   try {
     //geting values
-    const { name, email, password, type, fees, available } = req.body;
+    const { name, email, password, type, fees } = req.body;
     const img = req.file;
+    const { body, file } = req;
+    console.log(body, file);
 
     //validating fields
-    if (!name || !email || !password || !type || !img || !fees || !available) {
+    if (!name || !email || !password || !type || !img || !fees) {
+      console.log(name, email, img, fees, type, password);
+
       throw new Error("All fields are required");
     }
 
@@ -52,7 +56,7 @@ const addDoctor = async (req, res) => {
     });
   } catch (error) {
     //sending error response
-    res.status(400).json({
+    res.json({
       success: false,
       message: error.message,
     });
@@ -99,4 +103,21 @@ const adminLogin = async (req, res) => {
   }
 };
 
-export { addDoctor, adminLogin };
+// to get list of doctors
+const AllDoctors = async (req, res) => {
+  try {
+    const doctors = await Doctor.find({}).select("-password");
+    //sending response
+    res.json({
+      success: true,
+      doctors,
+    });
+  } catch (error) {
+    //sending error response
+    res.json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+export { addDoctor, adminLogin, AllDoctors };

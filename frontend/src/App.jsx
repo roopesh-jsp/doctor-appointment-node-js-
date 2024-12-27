@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Doctor from "./pages/Doctor";
 import RootLayout from "./pages/RootLayout";
 import Home from "./pages/Home";
+import { ToastContainer } from "react-toastify";
 
 const Routes = createBrowserRouter([
   {
@@ -41,7 +42,12 @@ const Routes = createBrowserRouter([
 
 function App() {
   // return <div className="mx-4 md:mx-[10%]">App</div>;
-  return <RouterProvider router={Routes} />;
+  return (
+    <>
+      <ToastContainer />
+      <RouterProvider router={Routes} />
+    </>
+  );
 }
 
 export default App;

@@ -6,8 +6,10 @@ import { use } from "react";
 
 function Doctor() {
   const { Did } = useParams();
-  const { findDoctor } = useContext(AppContext);
-  const doc = findDoctor(Did);
+  const { findDoctor, doctor } = useContext(AppContext);
+  // const doc = findDoctor(Did);
+  // console.log(doc);
+
   const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
   const [docSlots, setDocSlots] = useState([]);
@@ -55,24 +57,24 @@ function Doctor() {
   };
 
   useEffect(() => {
+    findDoctor(Did);
+  }, []);
+  useEffect(() => {
     getAvailableSlots();
-  }, [doc]);
+  }, [doctor]);
   // useEffect(() => {
   //   console.log(docSlots);
   // }, [docSlots]);
 
   return (
     <div className="flex flex-col items-center gap-3 mt-10">
-      <h1 className="text-2xl">{doc.name}</h1>
-      <img className="w-1/2 h-74" src={doc.img} alt="" />
-      <p className="uppercase font-bold">{doc.type}</p>
+      <h1 className="text-2xl">{doctor?.name}</h1>
+      <img className="w-[100px] h-74" src={doctor?.img} alt="" />
+      <p className="uppercase font-bold">{doctor?.type}</p>
       <p className="text-xl">book now</p>
       <div className="flex gap-3 mt-5 flex-wrap items-center justify-center">
         {docSlots.length &&
           docSlots.map((day, idx) => {
-            {
-              console.log(day[0] && days[day[0].dateTime.getDate()]);
-            }
             return (
               <div
                 key={idx}
@@ -97,6 +99,7 @@ function Doctor() {
                 className={`border  border-slate-500 px-3 py-1 rounded-full  cursor-pointer hover:bg-blue-400 hover:text-white1 ${
                   slotTime === slot.time ? "bg-blue-500 text-white" : ""
                 }`}
+                key={idx}
               >
                 {slot.time}
               </p>

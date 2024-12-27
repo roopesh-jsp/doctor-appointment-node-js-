@@ -38,16 +38,20 @@ function MyAppointments() {
       <h1 className="uppercase font-bold text-blue-500 text-2xl  my-2 text-center">
         my Appointments
       </h1>
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap items-center justify-center gap-4">
         {doctors.slice(0, 2).map((doctor) => (
           <div
             key={doctor.id}
-            className="flex flex-col md:flex-row items-center border my-4 rounded-md shadow-md  "
+            className="flex flex-col md:flex-row items-center border my-4 rounded-md shadow-md w-[600px] "
           >
-            <img className="md:w-1/3 h-full" src={doctor.img} alt="" />
-            <div className="flex flex-col gap-2 justify-center items-center h-full md:bg-green-100 md:w-1/3 text-2xl py-2 ">
-              <h1 className="capitalize">name:{doctor.name}</h1>
-              <p className="capitalize">{doctor.type}</p>
+            <img className="w-[200px] h-[100px]" src={doctor.img} alt="" />
+            <div className="flex flex-col gap-2 justify-center items-center h-full md:bg-blue-100 md:w-1/3 text-2xl py-2 ">
+              <div>
+                <h1 className="capitalize whitespace-nowrap text-lg">
+                  {doctor.name}
+                </h1>
+                <p className="capitalize text-sm text-center">{doctor.type}</p>
+              </div>
               {/* <p>{doctor.fees}</p> */}
               <p className="capitalize">fees : 500/-</p>
             </div>
