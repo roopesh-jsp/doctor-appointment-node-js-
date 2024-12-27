@@ -92,7 +92,7 @@ const adminLogin = async (req, res) => {
     });
   } catch (error) {
     //sending error response
-    res.status(400).json({
+    res.json({
       success: false,
       message: error.message,
     });
