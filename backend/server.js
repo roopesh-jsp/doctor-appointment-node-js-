@@ -6,6 +6,7 @@ import connectDB from "./config/db.js";
 import connectCloudinary from "./config/cloudinary.js";
 import adminRoutes from "./routes/admin.routes.js";
 import DoctorRoutes from "./routes/doctor.routes.js";
+import UserRouter from "./routes/user.routes.js";
 
 //app configuration
 const app = express();
@@ -17,6 +18,7 @@ app.use(cors());
 //endpoints
 app.use("/admin", adminRoutes);
 app.use("/doc", DoctorRoutes);
+app.use("/user", UserRouter);
 
 //server
 const PORT = process.env.PORT || 3000;

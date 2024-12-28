@@ -1,13 +1,15 @@
 import { ArrowDown, Droplets, MoveDown, User } from "lucide-react";
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
 
 function Navbar() {
   const navigate = useNavigate();
-  const [isToken, setIsToken] = React.useState(true);
+
+  const { token, setToken } = useContext(AppContext);
   function handleLogout() {
-    // localStorage.removeItem("token");
-    setIsToken(false);
+    localStorage.removeItem("token");
+    setToken(false);
   }
   return (
     <div className="flex justify-between items-center py-2 border-b border-gray-200">
@@ -24,7 +26,7 @@ function Navbar() {
         </ul>
       </nav>
       <div>
-        {isToken ? (
+        {token ? (
           <div className="flex items-center group relative hover:bg-slate-400 cursor-pointer hover:text-white px-2 py-2 rounded-md">
             <User />
             {/* <ArrowDown className="w-5 relative top-0.5" /> */}

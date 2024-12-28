@@ -1,14 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { use } from "react";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 function Doctor() {
   const { Did } = useParams();
-  const { findDoctor, doctor } = useContext(AppContext);
+  const { findDoctor, doctor, token, backendUrl, getAllDoctors } =
+    useContext(AppContext);
   // const doc = findDoctor(Did);
   // console.log(doc);
+  const navigate = useNavigate();
 
   const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
@@ -45,10 +49,27 @@ function Doctor() {
           minute: "2-digit",
         });
 
-        timeSlots.push({
-          dateTime: new Date(currDate),
-          time: formattedTime,
-        });
+        //checking for available slots
+        let day = currDate.getDate();
+        let month = currDate.getMonth() + 1;
+        let yr = currDate.getFullYear();
+
+        const slotDate = day + "_" + month + "_" + yr;
+        const slotTime = formattedTime;
+
+        const isSlotAvilable =
+          doctor.slots_booked[slotDate] &&
+          doctor.slots_booked[slotDate].includes(slotTime)
+            ? false
+            : true;
+
+        if (isSlotAvilable) {
+          //adding slot to array
+          timeSlots.push({
+            dateTime: new Date(currDate),
+            time: formattedTime,
+          });
+        }
 
         currDate.setMinutes(currDate.getMinutes() + 60);
       }
@@ -56,7 +77,46 @@ function Doctor() {
     }
   };
 
+  const bookAppointment = async () => {
+    try {
+      if (!token) {
+        toast.warn("login to book appointment");
+        return navigate("/login");
+      }
+      //constructing the date
+      const date = docSlots[slotIdx][0].dateTime;
+
+      let day = date.getDate();
+      let month = date.getMonth() + 1;
+      let yr = date.getFullYear();
+
+      const slotDate = day + "_" + month + "_" + yr;
+
+      //sending request
+      const { data } = await axios.post(
+        backendUrl + "/user/book-appointment",
+        {
+          docId: doctor._id,
+          slotDate,
+          slotTime,
+        },
+        { headers: { token } }
+      );
+      if (data.success) {
+        toast.success(data.message);
+        getAllDoctors();
+        navigate("/myAppoitments");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
+    console.log(doctor);
     findDoctor(Did);
   }, []);
   useEffect(() => {
@@ -106,7 +166,10 @@ function Doctor() {
             );
           })}
       </div>
-      <button className="bg-blue-500 text-white px-3 py-1 rounded-md">
+      <button
+        onClick={bookAppointment}
+        className="bg-blue-500 text-white px-3 py-1 rounded-md"
+      >
         Book
       </button>
     </div>

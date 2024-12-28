@@ -39,7 +39,7 @@ function MyAppointments() {
         my Appointments
       </h1>
       <div className="flex flex-wrap items-center justify-center gap-4">
-        {doctors.slice(0, 2).map((doctor) => (
+        {doctors?.slice(0, 2).map((doctor) => (
           <div
             key={doctor.id}
             className="flex flex-col md:flex-row items-center border my-4 rounded-md shadow-md w-[600px] "
