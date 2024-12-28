@@ -1,14 +1,18 @@
 import React from "react";
 import { useAdminContext } from "../context/adminContext";
+import { useDoctorContext } from "../context/DoctorContext";
 
 function Navbar() {
   const { adminToken, setAdminToken } = useAdminContext();
+  const { dtoken, setDToken } = useDoctorContext();
   function handleLogout() {
     setAdminToken("");
+    setDToken("");
     adminToken && localStorage.removeItem("adminToken");
+    dtoken && localStorage.removeItem("dtoken");
   }
   return (
-    <div className="bg-white">
+    <div className="bg-white ">
       <div className="flex  gap-4 items-center justify-between px-5 py-2">
         <div className="flex gap-10 items-center justify-between px-4 py-2">
           <h1>Logo.</h1>

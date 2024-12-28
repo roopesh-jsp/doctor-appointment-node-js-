@@ -1,7 +1,7 @@
 import React from "react";
 import { useAdminContext } from "./adminContext";
 import { NavLink } from "react-router-dom";
-import { File, MedalIcon, Plus } from "lucide-react";
+import { File, MedalIcon, Plus, User } from "lucide-react";
 
 function SideBar() {
   const { adminToken } = useAdminContext();
@@ -44,7 +44,30 @@ function SideBar() {
           </div>
         </ul>
       ) : (
-        <></>
+        <ul className="">
+          <div
+            className={`flex gap-3 items-center   px-10 py-4 capitalize cursor-pointer hover:bg-stone-300 `}
+          >
+            <File />
+            <NavLink
+              className={({ isActive }) => `${isActive ? "font-bold" : ""}`}
+              to="/doctor-appointments"
+            >
+              doctor appointments
+            </NavLink>
+          </div>
+          <div
+            className={`flex gap-3 items-center  px-10 py-4 capitalize cursor-pointer hover:bg-stone-300 `}
+          >
+            <User />
+            <NavLink
+              className={({ isActive }) => `${isActive ? "font-bold" : ""}`}
+              to="/doctor-profile"
+            >
+              profile
+            </NavLink>
+          </div>
+        </ul>
       )}
     </div>
   );

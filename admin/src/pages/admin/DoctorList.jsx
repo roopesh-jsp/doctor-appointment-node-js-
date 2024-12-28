@@ -4,10 +4,16 @@ import { useAdminContext } from "../../context/adminContext";
 function DoctorList() {
   const { doctors, getAllDoctors, adminToken, changeAvailability } =
     useAdminContext();
-
   useEffect(() => {
     getAllDoctors();
   }, [adminToken, changeAvailability]);
+  if (doctors.length == 0) {
+    return (
+      <h1 className="text-4xl text-center mt-20 font-bold uppercase w-fit mx-auto">
+        no Doctors
+      </h1>
+    );
+  }
   return (
     <div className="m-3">
       <h1 className="text-3xl font-bold my-4 mx-1 text-blue-500 uppercase">

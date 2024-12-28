@@ -1,9 +1,12 @@
 import express from "express";
 import {
   bookAppointment,
+  cancelAppointment,
+  getAppointments,
   getProfile,
   loginUser,
   registerUser,
+  sendMail,
   updateProfile,
 } from "../controllers/user.controller.js";
 import authUser from "../middlewares/userAuth.js";
@@ -24,5 +27,11 @@ UserRouter.post(
 );
 
 UserRouter.post("/book-appointment", authUser, bookAppointment);
+
+UserRouter.get("/my-appointments", authUser, getAppointments);
+
+UserRouter.post("/cancel-appointment", authUser, cancelAppointment);
+
+UserRouter.get("/mail", sendMail);
 
 export default UserRouter;

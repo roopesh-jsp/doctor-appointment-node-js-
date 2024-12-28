@@ -11,6 +11,9 @@ const adminContext = createContext({
   doctors: [],
   getAllDoctors: () => {},
   changeAvailability: () => {},
+  getAllAppointments: () => {},
+  appointments: [],
+  cancelAppointment: () => {},
 });
 
 const AdminContextProvider = ({ children }) => {
@@ -18,6 +21,7 @@ const AdminContextProvider = ({ children }) => {
     localStorage.getItem("adminToken")
   );
   const [doctors, setDoctors] = useState([]);
+  const [appointments, setAppointments] = useState([]);
 
   //getting backend url
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -51,6 +55,40 @@ const AdminContextProvider = ({ children }) => {
       toast.error(error.message);
     }
   };
+
+  //getting all appointment
+  const getAllAppointments = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + "/admin/appointments", {
+        headers: { adminToken },
+      });
+      setAppointments(data.appointments);
+    } catch (error) {
+      toast.error(error.message);
+      console.log(error);
+    }
+  };
+
+  const cancelAppointment = async (appointmentId) => {
+    try {
+      const { data } = await axios.post(
+        backendUrl + "/admin/appointment-cancel",
+        { appointmentId },
+        { headers: { adminToken } }
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+        getAllAppointments();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+      console.log(error);
+    }
+  };
+
   const ctxVal = {
     adminToken,
     setAdminToken,
@@ -58,6 +96,9 @@ const AdminContextProvider = ({ children }) => {
     doctors,
     getAllDoctors,
     changeAvailability,
+    getAllAppointments,
+    appointments,
+    cancelAppointment,
   };
   return (
     <adminContext.Provider value={ctxVal}>{children}</adminContext.Provider>

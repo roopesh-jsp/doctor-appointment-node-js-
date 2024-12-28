@@ -4,8 +4,6 @@ const authUser = async (req, res, next) => {
   try {
     const { token } = req.headers;
 
-    console.log(token, req.headers);
-
     if (!token) {
       throw new Error("no token found");
     }

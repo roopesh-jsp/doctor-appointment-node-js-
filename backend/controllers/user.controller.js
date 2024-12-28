@@ -5,7 +5,10 @@ import jwt from "jsonwebtoken";
 import { v2 as cloudnary } from "cloudinary";
 import Doctor from "../models/doctor.model.js";
 import Appointment from "../models/appointment.models.js";
+import { sendGMail } from "../config/nodemailer.js";
 
+// import { transporter } from "../config/nodemailer.js";
+let jobs = {};
 const registerUser = async (req, res) => {
   try {
     const { email, password, name } = req.body;
@@ -197,6 +200,64 @@ const bookAppointment = async (req, res) => {
     //updating slots of doctor
     await Doctor.findByIdAndUpdate(docId, { slots_booked: slots_booked });
 
+    //sending mail of appointment booked
+    sendGMail({
+      to: userData.email,
+      subject: "sucessfully booked the appoitment",
+      text: `you have booked the appointment with the doctor ${docData.name}
+      on the day of ${slotDate} at ${slotTime} utlise your slot on right time, thank you `,
+    });
+
+    //sending mail on missing appointment
+    const [day, month, year] = slotDate.split("_");
+    const formattedDate = `${year}-${month}-${day}`;
+
+    // Convert the slotTime (04:00 PM) to 24-hour format
+    function convertTo24Hour(time) {
+      const [timePart, modifier] = time.split(" ");
+      let [hours, minutes] = timePart.split(":");
+
+      if (modifier === "PM" && hours !== "12") {
+        hours = parseInt(hours) + 12;
+      }
+      if (modifier === "AM" && hours === "12") {
+        hours = "00";
+      }
+
+      return `${hours}:${minutes}`;
+    }
+
+    const formattedTime = convertTo24Hour(slotTime);
+
+    //Combine the formattedDate and formattedTime
+    const appointmentDateTime = new Date(
+      `${formattedDate}T${formattedTime}:00`
+    );
+    console.log(appointmentDateTime);
+    const reminderTime = new Date(
+      appointmentDateTime.getTime() + 15 * 60 * 1000
+    ); // 15 minutes after appointment
+
+    const delay = reminderTime.getTime() - new Date().getTime();
+
+    const fun = async () => {
+      const appoinment = await Appointment.findById(newAppointment._id);
+
+      if (!appoinment.isCompleted) {
+        sendGMail({
+          to: userData.email,
+          subject: "you have missed the appointment",
+          text: `you have missed the appointment with the doctor ${docData.name}
+          on the day of ${slotDate} at ${slotTime} reschdule ypuself with confortable date and time , thank you `,
+        });
+      }
+    };
+
+    const job = setTimeout(() => {
+      fun();
+    }, 10 * 1000);
+
+    jobs[newAppointment._id] = job;
     //sending responsee
     res.json({
       success: true,
@@ -209,4 +270,92 @@ const bookAppointment = async (req, res) => {
     });
   }
 };
-export { registerUser, loginUser, getProfile, updateProfile, bookAppointment };
+
+// get user appointments
+const getAppointments = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const appointments = await Appointment.find({ userId });
+    res.json({
+      success: true,
+      appointments,
+      message: "appointments fetched",
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const cancelAppointment = async (req, res) => {
+  try {
+    const { userId, appointmentId } = req.body;
+
+    const appointmentData = await Appointment.findById(appointmentId);
+
+    if (appointmentData.userId !== userId) {
+      throw new Error("noot authorized");
+    }
+
+    //canceling appointment via appoinment model
+    await Appointment.findByIdAndUpdate(appointmentId, { cancelled: true });
+
+    //updateing doctors slots
+    const { docId, slotTime, slotDate } = appointmentData;
+
+    const doctorData = await Doctor.findById(docId);
+
+    //removing slot
+    let slots_booked = doctorData.slots_booked;
+
+    slots_booked[slotDate] = slots_booked[slotDate]?.filter(
+      (ele) => ele !== slotTime
+    );
+
+    await Doctor.findByIdAndUpdate(docId, { slots_booked });
+
+    //sending response
+    res.json({
+      success: true,
+      message: "appointment cancelled",
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const sendMail = async (req, res) => {
+  try {
+    sendGMail({
+      to: "rupzkumar5@gmail.com",
+      subject: "testing",
+      text: "lorem test purpose",
+    });
+    res.json({
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      success: false,
+    });
+  }
+};
+export {
+  registerUser,
+  loginUser,
+  getProfile,
+  updateProfile,
+  bookAppointment,
+  getAppointments,
+  cancelAppointment,
+  sendMail,
+  jobs,
+};
