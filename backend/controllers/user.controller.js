@@ -204,8 +204,9 @@ const bookAppointment = async (req, res) => {
     sendGMail({
       to: userData.email,
       subject: "sucessfully booked the appoitment",
-      text: `you have booked the appointment with the doctor ${docData.name}
-      on the day of ${slotDate} at ${slotTime} utlise your slot on right time, thank you `,
+      html: `<div>
+      you have booked the appointment with the doctor <b>${docData.name}</b> <hr />
+      on the day of <b>${slotDate}</b> at <b>${slotTime}</b> <hr/> utlise your slot on right time, thank you</div> `,
     });
 
     //sending mail on missing appointment
@@ -244,18 +245,21 @@ const bookAppointment = async (req, res) => {
       const appoinment = await Appointment.findById(newAppointment._id);
 
       if (!appoinment.isCompleted) {
+        let link = "http://localhost:5173/doctors/";
+        link = link + appoinment.docId;
         sendGMail({
           to: userData.email,
           subject: "you have missed the appointment",
-          text: `you have missed the appointment with the doctor ${docData.name}
-          on the day of ${slotDate} at ${slotTime} reschdule ypuself with confortable date and time , thank you `,
+          html: `<div>
+          you have missed the appointment with the doctor  <b>${docData.name}</b> <hr />
+      on the day of <b>${slotDate}</b> at <b>${slotTime}</b> <hr/> reschdule yourself with confortable date and time <a href=${link}>click me</a> , thank you </div>`,
         });
       }
     };
 
     const job = setTimeout(() => {
       fun();
-    }, 10 * 1000);
+    }, delay);
 
     jobs[newAppointment._id] = job;
     //sending responsee
@@ -336,7 +340,9 @@ const sendMail = async (req, res) => {
     sendGMail({
       to: "rupzkumar5@gmail.com",
       subject: "testing",
-      text: "lorem test purpose",
+      html: `<div>
+      you have booked the appointment with the doctor <b>roopesh</b> <br />
+      on the day of <b>10_1_23</b> at <b>4:00 am</b> <br/> utlise your slot on right time, thank you</div> `,
     });
     res.json({
       success: true,

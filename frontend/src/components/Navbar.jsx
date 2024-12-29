@@ -10,6 +10,7 @@ function Navbar() {
   function handleLogout() {
     localStorage.removeItem("token");
     setToken(false);
+    navigate("/login");
   }
   return (
     <div className="flex justify-between items-center py-2 border-b border-gray-200">

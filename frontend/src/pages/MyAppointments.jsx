@@ -12,11 +12,14 @@ function MyAppointments() {
   const [idx, setIdx] = useState();
   const navigate = useNavigate();
 
-  if (!token) {
-    toast.warn("login first");
-    navigate("/login");
-    return;
-  }
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+      toast.warn("login first");
+
+      return;
+    }
+  }, []);
 
   async function getAppointments() {
     try {
@@ -114,14 +117,16 @@ function MyAppointments() {
         {appointments?.map((appointment) => (
           <div
             key={appointment._id}
-            className="flex flex-col md:flex-row items-center border my-4 rounded-md shadow-md w-[600px] "
+            className="flex flex-col p-4 md:flex-row items-center border my-4 rounded-md shadow-md w-[600px] "
           >
-            <img
-              className="w-[200px] h-[100px]"
-              src={appointment.docData.img}
-              alt=""
-            />
-            <div className="flex flex-col gap-2 justify-center items-center h-full md:bg-blue-100 md:w-1/3 text-2xl py-2 ">
+            <div className=" max-md:border-b-4  md:border-r-2">
+              <img
+                className="w-24 mr-5 mb-5 h-24 rounded-full "
+                src={appointment.docData.img}
+                alt=""
+              />
+            </div>
+            <div className="flex flex-col gap-2 max-md:border-b-4 justify-center items-center h-full md:w-1/3 text-2xl py-2 md:border-r-2">
               <div>
                 <h1 className="capitalize whitespace-nowrap text-lg">
                   {appointment.docData.name}
@@ -133,9 +138,15 @@ function MyAppointments() {
               {/* <p>{appointment.fees}</p> */}
               <p className="capitalize">fees : 500/-</p>
             </div>
-            <div className="flex flex-col gap-2 justify-center items-center h-full md:w-1/3 py-4 ">
-              <span>day - {appointment.slotDate}</span>
-              <span>Time slot - {appointment.slotTime}</span>
+            <div className="flex flex-col gap-2 mx-auto  justify-center items-center h-full  py-4 ">
+              <span>
+                <span className="font-semibold">day - </span>
+                {appointment.slotDate}
+              </span>
+              <span>
+                <span className="font-semibold">Time slot - </span>
+                {appointment.slotTime}
+              </span>
               {appointment.cancelled || appointment.isCompleted ? (
                 <>
                   {appointment.cancelled ? (

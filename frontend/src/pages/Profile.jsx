@@ -51,7 +51,10 @@ export default function Profile() {
   }
   return (
     userData && (
-      <form onSubmit={handleUpdate} className="m-2 flex flex-col gap-2 ">
+      <form
+        onSubmit={handleUpdate}
+        className="m-2 flex flex-col items-center mt-20 gap-3 "
+      >
         <div>
           {isEdit ? (
             <label htmlFor="image">
@@ -59,7 +62,7 @@ export default function Profile() {
                 <img
                   src={img ? URL.createObjectURL(img) : userData.img}
                   alt=""
-                  className="w-2/5 aspect-square"
+                  className="w-2/5 aspect-square "
                 />
               </div>
               <input
@@ -162,7 +165,7 @@ export default function Profile() {
             )}
           </div>
         </div>
-        <div>
+        <div className="mt-5">
           {isEdit ? (
             <button className="bg-blue-400 px-4 py-2 text-stone-100 capitalize font-semibold rounded-md w-fit">
               save

@@ -9,11 +9,12 @@ export const transporter = nodemailer.createTransport({
   },
 });
 
-export const sendGMail = async ({ to, subject, text }) => {
+export const sendGMail = async ({ to, subject, text, html }) => {
   transporter.sendMail({
     from: "testingwork42@gmail.com",
     to,
     subject,
     text,
+    html,
   });
 };

@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Appointment from "../models/appointment.models.js";
 import { jobs } from "./user.controller.js";
+import { sendGMail } from "../config/nodemailer.js";
 
 const changeAvialability = async (req, res) => {
   try {
@@ -156,6 +157,14 @@ const appointmentCancel = async (req, res) => {
 
     //clearing timeout setted for sending email on missing appointment
     clearTimeout(jobs[appointmentId]);
+
+    sendGMail({
+      to: appointmentData.userData.email,
+      subject: "your appointment was cancled",
+      html: `<div>
+              we have canclled your appointment with the doctor  <b>${appointmentData.docData.name}</b> <hr />
+          on the day  <b>${appointmentData.slotDate}</b> at <b>${appointmentData.slotTime}</b> <hr/> due to valid reasons, sorry for the inconvience. reschdule yourself with confortable date and time <a href=http://localhost:5173/doctors/${appointmentData.docId}>click me</a> , thank you </div>`,
+    });
 
     res.json({
       success: true,

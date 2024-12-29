@@ -43,13 +43,13 @@ function AddDoctor() {
   }
   return (
     <div className="my-5 mx-3">
-      <h1 className="text-3xl font-bold my-4 mx-1 text-blue-500 uppercase">
+      <h1 className="text-3xl font-bold my-4 text-center text-blue-500 uppercase">
         add doctor
       </h1>
       <form
         ref={formRef}
         onSubmit={handleSubmit}
-        className="bg-white rounded-lg shadow-xl p-5"
+        className="bg-white rounded-lg shadow-xl p-5 mx-20 my-10"
       >
         <div className="flex gap-3 items-center capitalize">
           <label htmlFor="img" className="cursor-pointer p-4">
@@ -71,7 +71,7 @@ function AddDoctor() {
           />
           <p className="text-xl">select doctor image</p>
         </div>
-        <div className="flex flex-wrap gap-10">
+        <div className="grid grid-cols-3 gap-10">
           <input
             type="text"
             name="name"
@@ -118,7 +118,7 @@ function AddDoctor() {
           </div>
         </div>
         <button
-          className="px-10 py-2 m-3 uppercase rounded-full bg-blue-500 font-bold text-stone-100"
+          className="px-10 py-2 m-5 uppercase rounded-full bg-blue-500 font-bold text-stone-100"
           disabled={loading}
         >
           {loading ? "adding ... " : "add"}
